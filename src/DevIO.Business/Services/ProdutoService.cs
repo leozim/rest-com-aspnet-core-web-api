@@ -6,7 +6,7 @@ using DevIO.Business.Models.Validations;
 
 namespace DevIO.Business.Services
 {
-    public class ProdutoService : BaseService, IProdutoService<Entity>
+    public class ProdutoService : BaseService, IProdutoService
     {
         private readonly IProdutoRepository _produtoRepository;
 

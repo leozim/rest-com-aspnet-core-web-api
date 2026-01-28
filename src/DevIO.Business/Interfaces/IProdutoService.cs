@@ -4,7 +4,7 @@ using DevIO.Business.Models;
 
 namespace DevIO.Business.Interfaces
 {
-    public interface IProdutoService<TEntity> : IDisposable where TEntity : Entity
+    public interface IProdutoService : IDisposable
     {
         Task Adicionar(Produto produto);
         Task Atualizar(Produto produto);

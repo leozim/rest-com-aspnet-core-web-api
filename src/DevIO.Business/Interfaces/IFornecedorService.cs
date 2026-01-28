@@ -4,7 +4,7 @@ using DevIO.Business.Models;
 
 namespace DevIO.Business.Interfaces
 {
-    public interface IFornecedorService<TEntity> : IDisposable where TEntity : Entity
+    public interface IFornecedorService: IDisposable
     {
         Task<bool> Adicionar(Fornecedor fornecedor);
         Task<bool> Atualizar(Fornecedor fornecedor);

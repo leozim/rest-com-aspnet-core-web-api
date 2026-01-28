@@ -7,7 +7,7 @@ using DevIO.Business.Models.Validations;
 
 namespace DevIO.Business.Services
 {
-    public class FornecedorService : BaseService, IFornecedorService<Entity>
+    public class FornecedorService : BaseService, IFornecedorService
     {
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IEnderecoRepository _enderecoRepository;
@@ -31,12 +31,18 @@ namespace DevIO.Business.Services
             if (!ExecutarValidacao(new FornecedorValidation(), fornecedor)
                 || !ExecutarValidacao(new EnderecoValidation(), fornecedor.Endereco))
             {
-                // return await Task.FromResult(false); // desnecessário! cria nova Task mas o Async automaticamente ja embrulha o retorno em uma task au tomaticamente
+                // return await Task.FromResult(false); // desnecessário! cria nova Task mas o Async automaticamente ja embrulha o retorno em uma task automaticamente
+                return false;
+            }
+
+            if ((await _fornecedorRepository.Buscar(f => f.Document == fornecedor.Document)).Any())
+            {
+                Notificar("Já existe um fornecedor com este documento informado");
                 return false;
             }
             
             await _fornecedorRepository.Adicionar(fornecedor);
-            // return await Task.FromResult(false); // desnecessário! cria nova Task mas o Async automaticamente ja embrulha o retorno em uma task au tomaticamente
+            // return await Task.FromResult(false); // desnecessário! cria nova Task mas o Async automaticamente ja embrulha o retorno em uma task automaticamente
             return true;
         }
 
@@ -47,8 +53,7 @@ namespace DevIO.Business.Services
                 return false;
             }
 
-            if (_fornecedorRepository.Buscar(f => f.Document == fornecedor.Document && f.Id != fornecedor.Id).Result
-                .Any())
+            if ((await _fornecedorRepository.Buscar(f => f.Document == fornecedor.Document && f.Id != fornecedor.Id)).Any())
             {
                 Notificar("Já  existe um Fornecedor com esse documento");
                 return false;
@@ -61,7 +66,7 @@ namespace DevIO.Business.Services
 
         public async Task<bool> Remover(Guid id)
         {
-            if (_fornecedorRepository.ObterFornecedorProdutosEndereco(id).Result.Produtos.Any())
+            if ((await _fornecedorRepository.ObterFornecedorProdutosEndereco(id)).Produtos.Any())
             {
                 Notificar("O fornecedor possui produtos cadastrados!");
                 return false;
