@@ -86,6 +86,19 @@ namespace DevIO.Api.Controllers
             return CustomResponse(fornecedorDto);
         }
 
+        [HttpPut("atualizar-endereco/{id:guid}")]
+        public async Task<IActionResult> AtualizarEndereco(Guid id, EnderecoDto enderecoDto)
+        {
+            if (id != enderecoDto.Id) return BadRequest();
+            
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+            
+            var endereco = _mapper.Map<Endereco>(enderecoDto);
+            await _fornecedorService.AtualizarEndereco(endereco);
+            
+            return CustomResponse(enderecoDto);
+        }
+
         private async Task<ActionResult<FornecedorDto>> ObterFornecedorProdutosEndereco(Guid id)
         {
             return _mapper.Map<FornecedorDto>(await _fornecedorRepository.ObterFornecedorProdutosEndereco(id));
