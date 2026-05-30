@@ -98,6 +98,43 @@ namespace DevIO.Api.Controllers
             return CustomResponse(produtoDto);
         }
 
+        [HttpPost("adicionar")]
+        public async Task<ActionResult<ProdutoImagemDto>> AdicionarComImagemUploadIFormFile(ProdutoImagemDto produtoImagemDto)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            var imgPrefixo = Guid.NewGuid() + "_";
+            if (!await UploadArquivoIFormFile(produtoImagemDto.ImagemUpload, imgPrefixo))
+            {
+                return CustomResponse(ModelState);
+            }
+
+            produtoImagemDto.Imagem = imgPrefixo + produtoImagemDto.ImagemUpload.FileName;
+            await _produtoService.Adicionar(_mapper.Map<Produto>(produtoImagemDto));
+
+            return CustomResponse(produtoImagemDto);
+        }
+        
+        [RequestSizeLimit(40000000)]
+        //[DisableRequestSizeLimit]
+        [HttpPost("imagem")]
+        public ActionResult AdicionarImagem(IFormFile file)
+        {
+            return Ok(file);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<ProdutoDto>> Delete(Guid id)
+        {
+            var produto = await ObterProduto(id);
+
+            if (produto == null) return NotFound();
+
+            await _produtoService.Remover(id);
+
+            return CustomResponse(produto);
+        }
+
         private bool UploadArquivoBase64(string arquivo, string imgNome)
         {
             if (string.IsNullOrEmpty(arquivo))
