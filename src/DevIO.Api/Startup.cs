@@ -45,9 +45,15 @@ namespace DevIO.Api
                     .UseLoggerFactory(MyLoggerFactory)
                     .EnableSensitiveDataLogging();
             });
+
+            services.AddIdentityConfiguration(Configuration, MyLoggerFactory);
+            
+            services.AddAutoMapper(typeof(Startup));
             
             services.WebApiConfigure();
-
+            
+            services.ResolveDependencies();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
