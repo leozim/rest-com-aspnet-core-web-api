@@ -46,16 +46,8 @@ namespace DevIO.Api
                     .EnableSensitiveDataLogging();
             });
             
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.WebApiConfigure();
 
-            services.AddAutoMapper(typeof(Startup));
-
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-            
-            services.ResolveDependencies();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,8 +63,8 @@ namespace DevIO.Api
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvcConfiguration();
+
         }
     }
 }

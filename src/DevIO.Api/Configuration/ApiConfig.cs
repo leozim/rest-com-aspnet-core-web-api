@@ -1,0 +1,34 @@
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace DevIO.Api.Configuration
+{
+    public static class ApiConfig
+    {
+        public static IServiceCollection WebApiConfigure(this IServiceCollection services)
+        {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
+            services.AddAutoMapper(typeof(Startup));
+            
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+            
+            services.ResolveDependencies();
+
+            return services;
+        }
+
+        public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app)
+        {
+            app.UseHttpsRedirection();
+            app.UseMvc();
+
+            return app;
+        }
+    }
+}
