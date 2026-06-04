@@ -6,7 +6,7 @@
         public string Secret { get; set; }
         public int ExpiracaoHoras { get; set; }
         // minha api
-        public string Emissor { get; set; }
+        public string IssuerEmissor { get; set; }
         // localhost/...
         public string Audiencia { get; set; }
     }
