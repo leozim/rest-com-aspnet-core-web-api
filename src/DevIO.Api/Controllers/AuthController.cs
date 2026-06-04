@@ -4,6 +4,7 @@ using DevIO.Business.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace DevIO.Api.Controllers
 {
@@ -54,7 +55,7 @@ namespace DevIO.Api.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var result = await _signInManager
+            SignInResult result = await _signInManager
                 .PasswordSignInAsync(loginUser.Email, loginUser.Password, false, true);
 
             if (result.Succeeded)
