@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,7 +85,7 @@ namespace DevIO.Api.Controllers
         }
 
         // gera um Tolkien pra determinado Email
-        private async Task<string> GerarJwt(string email)
+        private async Task<LoginResponseDto> GerarJwt(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var claims = await _userManager.GetClaimsAsync(user);
@@ -118,7 +119,20 @@ namespace DevIO.Api.Controllers
             });
             
             var encodedToken = tokenHandler.WriteToken(tolkien);
-            return encodedToken;
+
+            var response = new LoginResponseDto
+            {
+                AccessToken = encodedToken,
+                ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
+                UserToken = new UserTokenDto
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Claims = claims.Select(c => new ClaimDto { Type = c.Type, Value = c.Value })
+                }
+            };
+            
+            return response;
         }
         
         private static long ToUnixEpochDate(DateTime date)
