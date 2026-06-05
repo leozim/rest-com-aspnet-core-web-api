@@ -15,6 +15,16 @@ namespace DevIO.Api.Configuration
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development", builder =>
+                        builder
+                            .AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials());
+            });
             
             return services;
         }
