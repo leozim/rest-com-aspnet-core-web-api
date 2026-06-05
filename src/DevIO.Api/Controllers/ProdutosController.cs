@@ -6,11 +6,13 @@ using AutoMapper;
 using DevIO.Api.DTOs;
 using DevIO.Business.Interfaces;
 using DevIO.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevIO.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class ProdutosController : MainController
     {
@@ -28,7 +30,8 @@ namespace DevIO.Api.Controllers
             _produtoService = produtoService;
             _mapper = mapper;
         }
-
+        
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProdutoDto>>> GetAll()
         {

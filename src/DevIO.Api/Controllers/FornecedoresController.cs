@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevIO.Api.DTOs;
+using DevIO.Api.Extensions;
 using DevIO.Business.Interfaces;
 using DevIO.Business.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevIO.Api.Controllers
 {
     // [Route("api/[controller]")]
+    [Authorize]
     [Route("api/fornecedores")]
     public class FornecedoresController : MainController
     {
@@ -29,7 +32,8 @@ namespace DevIO.Api.Controllers
             _enderecoRepository = enderecoRepository;
             _mapper = mapper;
         }
-
+        
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FornecedorDto>>> ObterTodos()
         {
@@ -47,7 +51,8 @@ namespace DevIO.Api.Controllers
 
             return fornecedor;
         }
-
+        
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<FornecedorDto>> Adicionar(FornecedorDto fornecedorDto)
         {
@@ -57,7 +62,8 @@ namespace DevIO.Api.Controllers
 
             return CustomResponse(fornecedorDto);
         }
-
+        
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<FornecedorDto>> Atualizar(Guid id, FornecedorDto fornecedorDto)
         {
@@ -73,7 +79,8 @@ namespace DevIO.Api.Controllers
             
             return CustomResponse(fornecedorDto);
         }
-
+        
+        [ClaimsAuthorize("Fornecedor", "Excluir")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FornecedorDto>> Excluir(Guid id)
         {
@@ -85,7 +92,8 @@ namespace DevIO.Api.Controllers
             
             return CustomResponse(fornecedorDto);
         }
-
+        
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("atualizar-endereco/{id:guid}")]
         public async Task<IActionResult> AtualizarEndereco(Guid id, EnderecoDto enderecoDto)
         {
