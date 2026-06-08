@@ -58,6 +58,17 @@ namespace DevIO.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<FornecedorDto>> Adicionar(FornecedorDto fornecedorDto)
         {
+            /*if (User.Identity.IsAuthenticated)
+            {
+                var userName = User.Identity.Name;
+            }
+
+            if (UsuarioAutenticado)
+            {
+                var userName = AppUser.GetUserEmail();
+                var userId = UsuarioId;
+            }*/
+            
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             await _fornecedorService.Adicionar(_mapper.Map<Fornecedor>(fornecedorDto));
